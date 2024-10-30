@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-shop
+  namespace: keduit
+spec:
+  selector:
+    app: shop
+  ports:
+  - port: 80
+    targetPort: 80
+---
+# deploy-shop
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop
+  namespace: keduit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shop
+  template:
+    metadata:
+      labels:
+        app: shop
+    spec:
+      containers:
+      - name: shop
+        image: brian24/portal:shop
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: myvol
+            mountPath: /test
+      volumes:
+      - name: myvol
+        persistentVolumeClaim:
+          claimName: mypvc
+
+      imagePullSecrets:
+      - name: dockerlog
+

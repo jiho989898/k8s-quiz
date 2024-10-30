@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: class1
+  namespace: keduit
+mountOptions:
+- nfsvers=4.1
+parameters:
+  server: 211.183.3.199 # NFS Server를 구축한 IP or 도메인
+  share: /root/shared # NFS Server내 볼륨이 쌓이는 위치
+provisioner: nfs.csi.k8s.io
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
